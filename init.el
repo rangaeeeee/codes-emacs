@@ -1,34 +1,28 @@
-;;New features                                                                                     
-;; feature 0001 - start- Starting Emacs with Bookmark                                              
-(setq inhibit-splash-screen t)
-(require 'bookmark)
-(bookmark-bmenu-list)
-(switch-to-buffer "*Bookmark List*")
-;; feature 0001 - end - Starting Emacs with Bookmark  
+;to load the org-mode settings
 
-;; feature 0002 - start - highlighting matching braces
-(setq show-paren-style 'parenthesis) ; highlight brackets
-(setq show-paren-style 'expression) ; highlight entire expression
-(setq show-paren-style 'mixed) ; highlight brackets if visible, else entire expression
-;; feature 0002 - end - highlighting matching braces
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
 
-;; feature 0003 - start - 
-;; feature 0003 - end - 
 
-;;Customization                                                                                    
-;;cust - 0001                                                                                      
-(defalias 'list-buffers 'ibuffer) ; make ibuffer default                                           
+; emacs settings
+(set-face-attribute 'default nil :font "Monospace-14" )
+(set-frame-font "Monospace-14" nil t)
+;user defined settings
 
-;;cust - 0002                                                                                      
-(desktop-save-mode 1) ;save/restore opened files                                                   
 
-;;cust - 0003                                                                                      
-(recentf-mode 1) ; keep a list of recently opened files                                            
+;; compile the code
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+  '( (perl . t)         
+     (ruby . t)
+     (sh . t)
+     (python . t)
+     (emacs-lisp . t)   
+   ))
 
-;;cust - 0004                                                                                      
-(global-set-key "C-n n" 'xah-toggle-read-novel-mode)
-
-;;cust -0005
-;; turn on highlight matching brackets when cursor is on one
-(show-paren-mode 1)
-
+(load "~/.emacs.d/org-mode-settings")
+(load "~/.emacs.d/python-settings")
+(load "~/.emacs.d/normal-settings")
