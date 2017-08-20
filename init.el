@@ -1,12 +1,5 @@
 ;to load the org-mode settings
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-
-
 ; emacs settings
 (set-face-attribute 'default nil :font "Monospace-14" )
 (set-frame-font "Monospace-14" nil t)
