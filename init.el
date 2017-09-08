@@ -1,21 +1,21 @@
 ;to load the org-mode settings
 
-; emacs settings
-(set-face-attribute 'default nil :font "Monospace-14" )
-(set-frame-font "Monospace-14" nil t)
-;user defined settings
+(setq inhibit-startup-message t)
 
+(require 'package)
+(setq package-enable-at-startup nil)
+(add-to-list 'package-archives
+    '("melpa" . "https://melpa.org/packages/"))
 
-;; compile the code
-(org-babel-do-load-languages
- 'org-babel-load-languages
-  '( (perl . t)         
-     (ruby . t)
-     (sh . t)
-     (python . t)
-     (emacs-lisp . t)   
-   ))
+(package-initialize)
 
-(load "~/.emacs.d/org-mode-settings")
-(load "~/.emacs.d/python-settings")
-(load "~/.emacs.d/normal-settings")
+(unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+(use-package try
+    :ensure t)
+
+(use-package which-key
+    :ensure t
+    :config (which-key-mode))
