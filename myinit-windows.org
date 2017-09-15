@@ -842,4 +842,3 @@ Eshell prompt
 : origami-toggle-node
 
 #  LocalWords:  DIRED Javascript Screencasts Autocomplete
-
