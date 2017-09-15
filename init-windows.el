@@ -63,7 +63,7 @@
   (progn
     (newline-and-indent)
 ;    (insert (format "#+BEGIN_SRC %s\n" src-code-type))
-    (if (equal src-code-type "python") (insert(format "#+BEGIN_SRC %s\n" "python :results output")) (insert(format "#+BEGIN_SRC %s\n" src-code-type)))
+    (if (equal src-code-type "python") (insert(format "#+BEGIN_SRC %s\n" "python -n ")) (insert(format "#+BEGIN_SRC %s -n \n" src-code-type)))
     (newline-and-indent)
     (insert "#+END_SRC\n")
     (previous-line 2)
@@ -86,3 +86,13 @@
 (setq org-src-fontify-natively t)
 (setq org-export-html-postamble nil)
 (setq org-confirm-babel-evaluate nil)
+(set-face-attribute 'default nil :height 135)
+;; set a default font
+(when (member "DejaVu Sans Mono" (font-family-list))
+(set-face-attribute 'default nil :font "DejaVu Sans Mono-20"))
+(setq org-babel-default-header-args
+           (cons '(:exports . "both")
+                 (assq-delete-all :exports org-babel-default-header-args)))
+(setq org-babel-default-header-args
+           (cons '(:results . "output")
+                 (assq-delete-all :results org-babel-default-header-args)))
