@@ -1,4 +1,4 @@
-#+STARTUP: showall
+
 
 * interface tweaks
 #+BEGIN_SRC emacs-lisp
@@ -85,11 +85,11 @@
     (use-package color-theme
       :ensure t)
 
-    (use-package spacemacs-theme
-      :ensure t
-    :init
-    (load-theme 'spacemacs-light t)
-    )
+;    (use-package spacemacs-theme
+;      :ensure t
+;    :init
+;    (load-theme 'spacemacs-light t)
+;    )
 
 ;    use-package tangotango-theme
 ;      :ensure t
@@ -250,6 +250,31 @@
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 )
 #+END_SRC
+* web mode
+
+  #+BEGIN_SRC emacs-lisp -n :results output
+    (use-package web-mode
+        :ensure t
+        :config
+           (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.vue?\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+           (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+           (setq web-mode-engines-alist
+             '(("django"    . "\\.html\\'")))
+           (setq web-mode-ac-sources-alist
+           '(("css" . (ac-source-css-property))
+           ("vue" . (ac-source-words-in-buffer ac-source-abbrev))
+             ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+    (setq web-mode-enable-auto-closing t))
+    (setq web-mode-enable-auto-quoting t) ; this fixes the quote problem I mentioned
+  #+END_SRC
+
 * Javascript
 #+BEGIN_SRC emacs-lisp
 (use-package js2-mode
@@ -307,136 +332,139 @@
 #+END_SRC
 * Stuff to refile as I do more Screencasts
 #+BEGIN_SRC emacs-lisp
-;; babel stuff
+  ;; babel stuff
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)
-   (emacs-lisp . t)
-   (C . t)
-   (js . t)
-   (ditaa . t)
-   (dot . t)
-   (org . t)
-   (latex . t )
-   ))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (emacs-lisp . t)
+     (C . t)
+     (js . t)
+     (java . t)
+     (ditaa . t)
+     (dot . t)
+     (org . t)
+     (latex . t )
+     (plantuml . t)
+     (sh . t)
+     ))
 
 
 
-;; projectile
-(use-package projectile
+  ;; projectile
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-global-mode)
+  (setq projectile-completion-system 'ivy))
+
+  (use-package counsel-projectile
+    :ensure t
+    :config
+    (counsel-projectile-on))
+
+  (use-package smartparens
   :ensure t
   :config
-  (projectile-global-mode)
-(setq projectile-completion-system 'ivy))
+  (use-package smartparens-config)
+  (use-package smartparens-html)
+  (use-package smartparens-python)
+  (use-package smartparens-latex)
+  (smartparens-global-mode t)
+  (show-smartparens-global-mode t)
+  :bind
+  ( ("C-<down>" . sp-down-sexp)
+   ("C-<up>"   . sp-up-sexp)
+   ("M-<down>" . sp-backward-down-sexp)
+   ("M-<up>"   . sp-backward-up-sexp)
+  ("C-M-a" . sp-beginning-of-sexp)
+   ("C-M-e" . sp-end-of-sexp)
 
-(use-package counsel-projectile
+
+
+   ("C-M-f" . sp-forward-sexp)
+   ("C-M-b" . sp-backward-sexp)
+
+   ("C-M-n" . sp-next-sexp)
+   ("C-M-p" . sp-previous-sexp)
+
+   ("C-S-f" . sp-forward-symbol)
+   ("C-S-b" . sp-backward-symbol)
+
+   ("C-<right>" . sp-forward-slurp-sexp)
+   ("M-<right>" . sp-forward-barf-sexp)
+   ("C-<left>"  . sp-backward-slurp-sexp)
+   ("M-<left>"  . sp-backward-barf-sexp)
+
+   ("C-M-t" . sp-transpose-sexp)
+   ("C-M-k" . sp-kill-sexp)
+   ("C-k"   . sp-kill-hybrid-sexp)
+   ("M-k"   . sp-backward-kill-sexp)
+   ("C-M-w" . sp-copy-sexp)
+
+   ("C-M-d" . delete-sexp)
+
+   ("M-<backspace>" . backward-kill-word)
+   ("C-<backspace>" . sp-backward-kill-word)
+   ([remap sp-backward-kill-word] . backward-kill-word)
+
+   ("M-[" . sp-backward-unwrap-sexp)
+   ("M-]" . sp-unwrap-sexp)
+
+   ("C-x C-t" . sp-transpose-hybrid-sexp)
+
+   ("C-c ("  . wrap-with-parens)
+   ("C-c ["  . wrap-with-brackets)
+   ("C-c {"  . wrap-with-braces)
+   ("C-c '"  . wrap-with-single-quotes)
+   ("C-c \"" . wrap-with-double-quotes)
+   ("C-c _"  . wrap-with-underscores)
+  ("C-c `"  . wrap-with-back-quotes)
+  ))
+
+  ;;--------------------------------------------
+
+
+
+  (use-package cider
+    :ensure t 
+    :config
+    ; this is to make cider-jack-in-cljs work
+    (setq cider-cljs-lein-repl
+	"(do (require 'figwheel-sidecar.repl-api)
+	     (figwheel-sidecar.repl-api/start-figwheel!)
+	     (figwheel-sidecar.repl-api/cljs-repl))")
+
+    )
+
+  (use-package ac-cider
+    :ensure t
+    :config
+    (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+    (add-hook 'cider-mode-hook 'ac-cider-setup)
+    (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+    (eval-after-load "auto-complete"
+      '(progn
+	 (add-to-list 'ac-modes 'cider-mode)
+	 (add-to-list 'ac-modes 'cider-repl-mode)))
+    )
+
+  (use-package magit
   :ensure t
-  :config
-  (counsel-projectile-on))
-
-(use-package smartparens
-:ensure t
-:config
-(use-package smartparens-config)
-(use-package smartparens-html)
-(use-package smartparens-python)
-(use-package smartparens-latex)
-(smartparens-global-mode t)
-(show-smartparens-global-mode t)
-:bind
-( ("C-<down>" . sp-down-sexp)
- ("C-<up>"   . sp-up-sexp)
- ("M-<down>" . sp-backward-down-sexp)
- ("M-<up>"   . sp-backward-up-sexp)
-("C-M-a" . sp-beginning-of-sexp)
- ("C-M-e" . sp-end-of-sexp)
-
-
-
- ("C-M-f" . sp-forward-sexp)
- ("C-M-b" . sp-backward-sexp)
-
- ("C-M-n" . sp-next-sexp)
- ("C-M-p" . sp-previous-sexp)
-
- ("C-S-f" . sp-forward-symbol)
- ("C-S-b" . sp-backward-symbol)
-
- ("C-<right>" . sp-forward-slurp-sexp)
- ("M-<right>" . sp-forward-barf-sexp)
- ("C-<left>"  . sp-backward-slurp-sexp)
- ("M-<left>"  . sp-backward-barf-sexp)
-
- ("C-M-t" . sp-transpose-sexp)
- ("C-M-k" . sp-kill-sexp)
- ("C-k"   . sp-kill-hybrid-sexp)
- ("M-k"   . sp-backward-kill-sexp)
- ("C-M-w" . sp-copy-sexp)
-
- ("C-M-d" . delete-sexp)
-
- ("M-<backspace>" . backward-kill-word)
- ("C-<backspace>" . sp-backward-kill-word)
- ([remap sp-backward-kill-word] . backward-kill-word)
-
- ("M-[" . sp-backward-unwrap-sexp)
- ("M-]" . sp-unwrap-sexp)
-
- ("C-x C-t" . sp-transpose-hybrid-sexp)
-
- ("C-c ("  . wrap-with-parens)
- ("C-c ["  . wrap-with-brackets)
- ("C-c {"  . wrap-with-braces)
- ("C-c '"  . wrap-with-single-quotes)
- ("C-c \"" . wrap-with-double-quotes)
- ("C-c _"  . wrap-with-underscores)
-("C-c `"  . wrap-with-back-quotes)
-))
-
-;;--------------------------------------------
-
-
-
-(use-package cider
-  :ensure t 
-  :config
-  ; this is to make cider-jack-in-cljs work
-  (setq cider-cljs-lein-repl
-      "(do (require 'figwheel-sidecar.repl-api)
-           (figwheel-sidecar.repl-api/start-figwheel!)
-           (figwheel-sidecar.repl-api/cljs-repl))")
-
-  )
-
-(use-package ac-cider
-  :ensure t
-  :config
-  (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-  (add-hook 'cider-mode-hook 'ac-cider-setup)
-  (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-  (eval-after-load "auto-complete"
-    '(progn
-       (add-to-list 'ac-modes 'cider-mode)
-       (add-to-list 'ac-modes 'cider-repl-mode)))
-  )
-
-(use-package magit
-:ensure t
-:init
-(progn
-(bind-key "C-x g" 'magit-status)
-))
+  :init
+  (progn
+  (bind-key "C-x g" 'magit-status)
+  ))
 
 
 
   
-;; font scaling
-(use-package default-text-scale
-  :ensure t
-  :config
-  (global-set-key (kbd "C-M-=") 'default-text-scale-increase)
-  (global-set-key (kbd "C-M--") 'default-text-scale-decrease))
+  ;; font scaling
+  (use-package default-text-scale
+    :ensure t
+    :config
+    (global-set-key (kbd "C-M-=") 'default-text-scale-increase)
+    (global-set-key (kbd "C-M--") 'default-text-scale-decrease))
 
 
 
@@ -842,3 +870,27 @@ Eshell prompt
 : origami-toggle-node
 
 #  LocalWords:  DIRED Javascript Screencasts Autocomplete
+
+* emacs-neotree
+- for project tree management
+#+BEGIN_SRC emacs-lisp
+  (use-package neotree
+  :ensure t
+  )
+(defun neotree-project-dir ()
+    "Open NeoTree using the git root."
+    (interactive)
+    (let ((project-dir (projectile-project-root))
+          (file-name (buffer-file-name)))
+      (neotree-toggle)
+      (if project-dir
+          (if (neo-global--window-exists-p)
+              (progn
+                (neotree-dir project-dir)
+                (neotree-find file-name)))
+        (message "Could not find git project root."))))
+(global-set-key [f8] 'neotree-project-dir)
+  #+END_SRC
+
+  #+RESULTS:
+  : neotree-project-dir
