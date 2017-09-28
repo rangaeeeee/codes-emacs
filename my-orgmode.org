@@ -1,0 +1,28 @@
+* basic settings
+#+BEGIN_SRC emacs-lisp -n :results output
+  (setq org-startup-folded t)
+  (setq org-html-preamble nil)
+#+END_SRC
+
+* zenburn themes
+
+  #+BEGIN_SRC emacs-lisp -n :results output
+
+    (defvar zenburn-override-colors-alist
+      '(("zenburn-bg+05" . "#282828")
+	("zenburn-bg+1"  . "#2F2F2F")
+	("zenburn-bg+2"  . "#3F3F3F")
+	("zenburn-bg+3"  . "#4F4F4F")))
+    (load-theme 'zenburn t)
+  #+END_SRC
+
+* tab space
+
+  #+BEGIN_SRC emacs-lisp -n :results output
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
+  #+END_SRC
+
+  #+RESULTS:
+
